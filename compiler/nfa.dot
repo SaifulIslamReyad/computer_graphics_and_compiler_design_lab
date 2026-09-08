@@ -1,0 +1,23 @@
+digraph NFA {
+    rankdir=LR;
+    "__start__" [shape=point];
+    "__start__" -> "q0";
+    node [shape = doublecircle]; "q13";
+    node [shape = circle];
+    "q4" -> "q7" [label="a"];
+    "q5" -> "q8" [label="b"];
+    "q2" -> "q4" [label="&#949;"];
+    "q2" -> "q5" [label="&#949;"];
+    "q7" -> "q10" [label="&#949;"];
+    "q8" -> "q10" [label="&#949;"];
+    "q0" -> "q1" [label="&#949;"];
+    "q0" -> "q2" [label="&#949;"];
+    "q10" -> "q1" [label="&#949;"];
+    "q10" -> "q2" [label="&#949;"];
+    "q3" -> "q6" [label="a"];
+    "q1" -> "q3" [label="&#949;"];
+    "q9" -> "q11" [label="b"];
+    "q6" -> "q9" [label="&#949;"];
+    "q12" -> "q13" [label="a"];
+    "q11" -> "q12" [label="&#949;"];
+}

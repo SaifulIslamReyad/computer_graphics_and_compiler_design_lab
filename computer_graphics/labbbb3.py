@@ -411,107 +411,95 @@ for x1, y1, x2, y2 in lines:
 
 
 
-print()
-print(f"Number of lines : {number_of_lines}")
+# ============================================================
+# Print Execution Times - Fastest to Slowest
+# ============================================================
+
+times = [
+    ("Bresenham", bresenham_total_time),
+    ("DDA - Keep Float", float_total_time),
+    ("DDA - Round m", round_m_total_time),
+    ("Line Formula y = mx + c", formula_total_time)
+]
+
+# Sort by execution time
+times.sort(key=lambda x: x[1])
 
 print()
-print("DDA - Round m")
-print("----------------------------------------------")
-print(
-    f"Total execution time : "
-    f"{round_m_total_time:.9f} seconds"
-)
+print("==============================================")
+print("       EXECUTION TIME (FASTEST → SLOWEST)")
+print("==============================================")
 
-print()
-print("DDA - Keep Float")
-print("----------------------------------------------")
-print(
-    f"Total execution time : "
-    f"{float_total_time:.9f} seconds"
-)
+for i, (name, total_time) in enumerate(times, 1):
 
-print()
-print("Line Formula y = mx + c")
-print("----------------------------------------------")
-print(
-    f"Total execution time : "
-    f"{formula_total_time:.9f} seconds"
-)
-
-print()
-print("Bresenham")
-print("----------------------------------------------")
-print(
-    f"Total execution time : "
-    f"{bresenham_total_time:.9f} seconds"
-)
+    print()
+    print(f" {name} : {total_time * 1000:.6f} ms") 
 
 print()
 
-
-plt.figure(figsize=(12, 12))
-
-
-for i in range(number_of_lines):
-
-    x1, y1, x2, y2 = lines[i]
-
-    round_m_x, round_m_y = round_m_results[i]
-    float_x, float_y = float_results[i]
-    formula_x, formula_y = formula_results[i]
-    bresenham_x, bresenham_y = bresenham_results[i]
-
-    plt.scatter(
-        round_m_x,
-        round_m_y,
-        s=15,
-        color='blue',
-        alpha=0.5,
-        label="DDA - Round m" if i == 0 else ""
-    )
-
-    plt.scatter(
-        float_x,
-        float_y,
-        s=15,
-        color='red',
-        marker='x',
-        alpha=0.5,
-        label="DDA - Keep Float" if i == 0 else ""
-    )
-
-    plt.scatter(
-        formula_x,
-        formula_y,
-        s=15,
-        color='green',
-        alpha=0.5,
-        label="y = mx + c" if i == 0 else ""
-    )
-
-    plt.scatter(
-        bresenham_x,
-        bresenham_y,
-        s=18,
-        color='purple',
-        marker='*',
-        alpha=0.7,
-        label="Bresenham" if i == 0 else ""
-    )
+# plt.figure(figsize=(12, 12))
 
 
-plt.xlabel("X-axis")
-plt.ylabel("Y-axis")
+# for i in range(number_of_lines):
 
-plt.title(
-    f"Comparison of Line Drawing Algorithms "
-    f"({number_of_lines} Random Lines)"
-)
+#     x1, y1, x2, y2 = lines[i]
 
-plt.grid(True)
+#     round_m_x, round_m_y = round_m_results[i]
+#     float_x, float_y = float_results[i]
+#     formula_x, formula_y = formula_results[i]
+#     bresenham_x, bresenham_y = bresenham_results[i]
 
-plt.axis("equal")
+#     plt.scatter(
+#         round_m_x,
+#         round_m_y,
+#         s=15,
+#         color='blue',
+#         alpha=0.5,
+#         label="DDA - Round m" if i == 0 else ""
+#     )
 
-plt.legend()
+#     plt.scatter(
+#         float_x,
+#         float_y,
+#         s=15,
+#         color='red',
+#         marker='x',
+#         alpha=0.5,
+#         label="DDA - Keep Float" if i == 0 else ""
+#     )
 
-plt.show()
+#     plt.scatter(
+#         formula_x,
+#         formula_y,
+#         s=15,
+#         color='green',
+#         alpha=0.5,
+#         label="y = mx + c" if i == 0 else ""
+#     )
+
+#     plt.scatter(
+#         bresenham_x,
+#         bresenham_y,
+#         s=18,
+#         color='purple',
+#         marker='*',
+#         alpha=0.7,
+#         label="Bresenham" if i == 0 else ""
+#     )
+
+
+# plt.xlabel("X-axis")
+# plt.ylabel("Y-axis")
+
+# plt.title(
+#     f"Comparison of Line Drawing Algorithms "
+#     f"({number_of_lines} Random Lines)"
+# )
+
+# plt.grid(True)
+
+# plt.axis("equal")
+
+# plt.legend()
+
+# plt.show()
