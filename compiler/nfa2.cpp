@@ -94,19 +94,18 @@ string infixToPostfix(const string& infix)
 
     for (char c : infix)
     {
-        // Operand
+    
         if (isOperand(c))
         {
             postfix += c;
         }
 
-        // Opening parenthesis
+
         else if (c == '(')
         {
             operators.push(c);
         }
 
-        // Closing parenthesis
         else if (c == ')')
         {
             while (!operators.empty() && operators.top() != '(')
@@ -121,18 +120,8 @@ string infixToPostfix(const string& infix)
             }
         }
 
-        // Operator
         else
         {
-            /*
-                '*', '+', '?' are postfix unary operators.
-
-                Example:
-                    a*  a+  a?
-                We can immediately append them right after their operand
-                has been processed, no need to touch the operator stack.
-            */
-
             if (isUnaryPostfixOp(c))
             {
                 postfix += c;
@@ -161,49 +150,8 @@ string infixToPostfix(const string& infix)
     return postfix;
 }
 
+// ============================================
 
-// ============================================================
-// 7. INFIX → PREFIX
-//
-// We use:
-//     Reverse infix
-//     Swap ( and )
-//     Convert to postfix
-//     Reverse postfix
-//
-// NOTE: this reverse-trick is exact for binary operators (., |)
-// and operands, but for the postfix-unary operators (*, +, ?) it
-// keeps the operator glued to the SAME operand it was already
-// attached to (this matches the original code's behaviour for '*'
-// and is kept consistent here for '+' and '?' as well). It is a
-// readable "prefix-like" rendering rather than a strict formal
-// prefix notation for the unary operators.
-// ============================================================
-
-string infixToPrefix(string infix)
-{
-    reverse(infix.begin(), infix.end());
-
-    for (char& c : infix)
-    {
-        if (c == '(')
-            c = ')';
-
-        else if (c == ')')
-            c = '(';
-    }
-
-    string postfix = infixToPostfix(infix);
-
-    reverse(postfix.begin(), postfix.end());
-
-    return postfix;
-}
-
-
-// ============================================================
-// 8. NFA DATA STRUCTURES
-// ============================================================
 
 struct Transition
 {
@@ -235,18 +183,6 @@ void addTransition(int from, char symbol, int to)
 }
 
 
-// ============================================================
-// 11. THOMPSON NFA CONSTRUCTION
-//
-// Postfix operators:
-//
-//     a       → symbol
-//     .       → concatenation
-//     |       → union
-//     *       → Kleene star        (zero or more)
-//     +       → positive closure   (one or more)
-//     ?       → optional           (zero or one)
-// ============================================================
 
 Fragment buildNFA(const string& postfix)
 {
@@ -255,8 +191,7 @@ Fragment buildNFA(const string& postfix)
     for (char c : postfix)
     {
 
-        // Stack:
-        // [ 0 --a--> 1 ]
+       
 
         if (isOperand(c))
         {
@@ -274,62 +209,38 @@ Fragment buildNFA(const string& postfix)
 
         else if (c == '.')
         {
-            // The TOP fragment is B
+            
             Fragment B = st.top();
             st.pop();
 
-            // The fragment below B is A
             Fragment A = st.top();
             st.pop();
 
-            // Connect A to B using ε
             addTransition(A.accept, '#', B.start);
 
-            // Push the combined fragment
             st.push({A.start, B.accept});
         }
 
 
-        // ====================================================
-        // CASE 3: UNION '|'
-        // ====================================================
-        //
-        // Example:
-        // A|B
-        //
-        //              ε → A → ε
-        //             /         \
-        //        new --           --> new
-        //             \         /
-        //              ε → B → ε
-
         else if (c == '|')
         {
-            // TOP fragment is B
             Fragment B = st.top();
             st.pop();
 
-            // Next fragment is A
             Fragment A = st.top();
             st.pop();
 
-            // Create new start and accept states
             int start = newState();
             int accept = newState();
 
-            // New start can enter A
             addTransition(start, '#', A.start);
 
-            // New start can enter B
             addTransition(start, '#', B.start);
 
-            // A can finish at the new accept
             addTransition(A.accept, '#', accept);
 
-            // B can finish at the new accept
             addTransition(B.accept, '#', accept);
 
-            // Push the combined A|B fragment
             st.push({start, accept});
         }
 
@@ -464,47 +375,47 @@ Fragment buildNFA(const string& postfix)
 //     everything else follows BFS discovery order
 // ============================================================
 
-void renumberStates(Fragment& nfa)
-{
-    map<int, int> newId;
-    queue<int> bfsQueue;
+// void renumberStates(Fragment& nfa)
+// {
+//     map<int, int> newId;
+//     queue<int> bfsQueue;
 
-    newId[nfa.start] = 0;
-    bfsQueue.push(nfa.start);
+//     newId[nfa.start] = 0;
+//     bfsQueue.push(nfa.start);
 
-    while (!bfsQueue.empty())
-    {
-        int current = bfsQueue.front();
-        bfsQueue.pop();
+//     while (!bfsQueue.empty())
+//     {
+//         int current = bfsQueue.front();
+//         bfsQueue.pop();
 
-        for (const auto& t : transitions)
-        {
-            if (t.from == current && newId.find(t.to) == newId.end())
-            {
-                newId[t.to] = (int)newId.size();
-                bfsQueue.push(t.to);
-            }
-        }
-    }
+//         for (const auto& t : transitions)
+//         {
+//             if (t.from == current && newId.find(t.to) == newId.end())
+//             {
+//                 newId[t.to] = (int)newId.size();
+//                 bfsQueue.push(t.to);
+//             }
+//         }
+//     }
 
-    // Safety net: relabel any state BFS didn't reach (shouldn't
-    // happen with a well-formed Thompson NFA, but keeps things
-    // robust just in case).
-    for (int s = 0; s < stateCount; s++)
-    {
-        if (newId.find(s) == newId.end())
-            newId[s] = (int)newId.size();
-    }
+//     // Safety net: relabel any state BFS didn't reach (shouldn't
+//     // happen with a well-formed Thompson NFA, but keeps things
+//     // robust just in case).
+//     for (int s = 0; s < stateCount; s++)
+//     {
+//         if (newId.find(s) == newId.end())
+//             newId[s] = (int)newId.size();
+//     }
 
-    for (auto& t : transitions)
-    {
-        t.from = newId[t.from];
-        t.to   = newId[t.to];
-    }
+//     for (auto& t : transitions)
+//     {
+//         t.from = newId[t.from];
+//         t.to   = newId[t.to];
+//     }
 
-    nfa.start  = newId[nfa.start];
-    nfa.accept = newId[nfa.accept];
-}
+//     nfa.start  = newId[nfa.start];
+//     nfa.accept = newId[nfa.accept];
+// }
 
 
 // ============================================================
@@ -662,48 +573,6 @@ void printASCIIDiagram(int start, int accept)
 
 
 // ============================================================
-// 13c. GRAPHVIZ DOT EXPORT
-//
-// Writes a .dot file that can be rendered into an actual picture:
-//     dot -Tpng nfa.dot -o nfa.png
-// or pasted into an online viewer such as
-//     https://dreampuf.github.io/GraphvizOnline/
-// ============================================================
-
-void exportGraphvizDOT(int start, int accept, const string& filename = "nfa.dot")
-{
-    ofstream out(filename);
-
-    if (!out.is_open())
-    {
-        cout << "\n(Could not write " << filename << ")\n";
-        return;
-    }
-
-    out << "digraph NFA {\n";
-    out << "    rankdir=LR;\n";
-    out << "    \"__start__\" [shape=point];\n";
-    out << "    \"__start__\" -> \"q" << start << "\";\n";
-    out << "    node [shape = doublecircle]; \"q" << accept << "\";\n";
-    out << "    node [shape = circle];\n";
-
-    for (const auto& t : transitions)
-    {
-        string sym = (t.symbol == '#') ? "&#949;" : string(1, t.symbol);
-        out << "    \"q" << t.from << "\" -> \"q" << t.to
-            << "\" [label=\"" << sym << "\"];\n";
-    }
-
-    out << "}\n";
-    out.close();
-
-    cout << "\nGraphviz DOT diagram written to: " << filename << "\n";
-    cout << "Render it with:   dot -Tpng " << filename << " -o nfa.png\n";
-    cout << "Or paste its contents into: https://dreampuf.github.io/GraphvizOnline/\n";
-}
-
-
-// ============================================================
 // 14. #-CLOSURE
 // ============================================================
 
@@ -841,20 +710,16 @@ int main()
     string postfix = infixToPostfix(explicitRE);
     cout << "\nPostfix:\n";
     cout << postfix << endl;
-    string prefix = infixToPrefix(explicitRE);
-    cout << "\nPrefix:\n";
-    cout << prefix << endl;
     transitions.clear();
     stateCount = 0;
     Fragment nfa = buildNFA(postfix);
 
     // Force start state to always be q0, in BFS discovery order
-    renumberStates(nfa);
+    // renumberStates(nfa);
 
     displayTransitionTable(nfa.start, nfa.accept);
     displayMatrixTable(nfa.start, nfa.accept);
     printASCIIDiagram(nfa.start, nfa.accept);
-    exportGraphvizDOT(nfa.start, nfa.accept);
 
     int numberOfStrings;
     cout << "\nHow many strings do you want to test? ";
