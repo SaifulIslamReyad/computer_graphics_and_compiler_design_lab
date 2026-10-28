@@ -1,0 +1,53 @@
+----------RAW CODE
+void main() {
+    int 1i
+    j=5, k=10;
+
+
+    i = j+ k ; //j mod k are already declared
+    printf("%d",i);
+/* add identifier in 
+the symbol table */
+}
+
+----------CLEAN CODE
+void main(){int 1i j=5,k=10;i=j+k;printf("%d",i);}
+
+--------TOKENS
+<KEYWORD,void>
+<KEYWORD,main>
+<LPAREN,(>
+<RPAREN,)>
+<LBRACE,{>
+<KEYWORD,int>
+<NUMBER,1>
+<ID,1>
+<ID,2>
+<ASSIGN_OP,=>
+<NUMBER,5>
+<COMMA,,>
+<ID,3>
+<ASSIGN_OP,=>
+<NUMBER,10>
+<SEMICOLON,;>
+<ID,1>
+<ASSIGN_OP,=>
+<ID,2>
+<ARITHMETIC_OP,+>
+<ID,3>
+<SEMICOLON,;>
+<KEYWORD,printf>
+<LPAREN,(>
+<STRING_LITERAL,"%d">
+<COMMA,,>
+<ID,1>
+<RPAREN,)>
+<SEMICOLON,;>
+<RBRACE,}>
+
+----------SYMBOL TABLE
+Index-Identifier-Token
+1	i		ID
+2	j		ID
+3	k		ID
+Total Symbols: 3

@@ -1,0 +1,10 @@
+void main() {
+    int 1i
+    j=5, k=10;
+
+
+    i = j+ k ; //j mod k are already declared
+    printf("%d",i);
+/* add identifier in 
+the symbol table */
+}
