@@ -14,19 +14,7 @@ def dda_keep_float(x1, y1, x2, y2):
     xp_append = x_points.append
     yp_append = y_points.append
 
-    if dx == 0:
-
-        if y1 > y2:
-            y1, y2 = y2, y1
-
-        xi = round(x1)
-
-        for y in range(y1, y2 + 1):
-            xp_append(xi)
-            yp_append(y)
-
-        return x_points, y_points
-
+    
     if abs(dy) <= abs(dx):
 
         if x1 > x2:
@@ -77,18 +65,7 @@ def dda_round_m(x1, y1, x2, y2):
     xp_append = x_points.append
     yp_append = y_points.append
 
-    if dx == 0:
-
-        if y1 > y2:
-            y1, y2 = y2, y1
-
-        xi = round(x1)
-
-        for y in range(y1, y2 + 1):
-            xp_append(xi)
-            yp_append(y)
-
-        return x_points, y_points
+    
 
     if abs(dy) <= abs(dx):
 
@@ -136,24 +113,7 @@ def line_formula(x1, y1, x2, y2):
     dx = x2 - x1
     dy = y2 - y1
  
-    if dx == 0 and dy == 0:
- 
-        x_points.append(x1)
-        y_points.append(y1)
- 
-        return x_points, y_points
- 
-    if dx == 0:
- 
-        if y1 > y2:
-            y1, y2 = y2, y1
- 
-        for y in range(y1, y2 + 1):
- 
-            x_points.append(x1)
-            y_points.append(y)
- 
-        return x_points, y_points
+    
  
     # x1_orig, y1_orig, x2_orig, y2_orig = x1, y1, x2, y2
  
@@ -214,28 +174,7 @@ def bresenham_line(x1, y1, x2, y2):
     dx = x2 - x1
     dy = y2 - y1
 
-    if dx == 0 and dy == 0:
-
-        x_points.append(x1)
-        y_points.append(y1)
-
-        return x_points, y_points
-
-    if dx == 0:
-
-        if y1 > y2:
-            y1, y2 = y2, y1
-
-        y = y1
-
-        while y <= y2:
-
-            x_points.append(x1)
-            y_points.append(y)
-
-            y += 1
-
-        return x_points, y_points
+    
 
     steep = abs(dy) > abs(dx)
 

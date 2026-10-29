@@ -86,22 +86,7 @@ def dda_keep_float(x1, y1, x2, y2):
     x_points = []
     y_points = []
 
-    if dx == 0:
-
-        if y1 > y2:
-            y1, y2 = y2, y1
-
-        y = y1
-
-        while y <= y2:
-
-            x_points.append(round(x1))
-            y_points.append(round(y))
-
-            y += 1
-
-        return x_points, y_points
-
+    
 
     if abs(dy) <= abs(dx):
 
@@ -159,17 +144,6 @@ def line_formula(x1, y1, x2, y2):
     x_points = []
     y_points = []
 
-    if x1 == x2:
-
-        for y in range(
-            min(y1, y2),
-            max(y1, y2) + 1
-        ):
-
-            x_points.append(x1)
-            y_points.append(y)
-
-        return x_points, y_points
 
     m = (y2 - y1) / (x2 - x1)
 
